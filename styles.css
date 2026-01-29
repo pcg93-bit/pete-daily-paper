@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pete Daily Paper</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0b0b0b" />
+  <link rel="icon" href="/icon-192.png">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand__name">Pete Daily Paper</div>
+      <div class="brand__sub">Curious • optimistic • high-signal</div>
+    </div>
+
+    <div class="topbar__actions">
+      <button id="btnRefresh" class="btn">Regenerate</button>
+      <button id="btnAddToHome" class="btn btn--ghost" title="On iPhone: Share → Add to Home Screen">Install</button>
+    </div>
+  </header>
+
+  <nav class="sectionnav" id="sectionNav"></nav>
+
+  <main class="layout">
+    <section class="maincol">
+      <div class="headlineRow">
+        <div>
+          <div class="kicker" id="editionDate">Loading…</div>
+          <h1 class="h1" id="frontTitle">Today’s Edition</h1>
+          <p class="lead" id="frontLead"></p>
+        </div>
+        <div class="badge" id="statusBadge">Checking…</div>
+      </div>
+
+      <div id="content"></div>
+    </section>
+
+    <aside class="sidecol">
+      <div class="panel">
+        <div class="panel__title">Saved</div>
+        <div class="panel__sub">Stories you saved across editions</div>
+        <div id="savedList" class="list"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__title">Watchlists</div>
+        <div class="panel__sub">Investing + Tools</div>
+
+        <div class="tabs">
+          <button class="tab tab--active" data-tab="invest">Investing</button>
+          <button class="tab" data-tab="tools">Tools</button>
+        </div>
+
+        <div id="watchInvest" class="list"></div>
+        <div id="watchTools" class="list hidden"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__title">Settings</div>
+        <label class="field">
+          <span>API Base URL</span>
+          <input id="apiBase" placeholder="https://your-worker.yourname.workers.dev" />
+        </label>
+        <button id="btnSaveSettings" class="btn btn--full">Save</button>
+        <div class="muted small">
+          Tip: set this once after you deploy your Worker.
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <div class="small muted">
+      Generates once per day when you open the app. “Regenerate” forces a refresh.
+    </div>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

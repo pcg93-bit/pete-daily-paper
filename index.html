@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pete Daily Paper</title>
+
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0b0b0b" />
+
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand__name">Pete Daily Paper</div>
+      <div class="brand__sub">Curious • Optimistic • High-signal</div>
+    </div>
+
+    <div class="topbar__actions">
+      <button id="btnRefresh" class="btn">Regenerate</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="maincol">
+      <div class="headlineRow">
+        <div>
+          <div class="kicker" id="editionDate">Loading…</div>
+          <h1 class="h1">Today’s Edition</h1>
+          <p class="lead" id="frontLead"></p>
+        </div>
+      </div>
+
+      <div id="content">
+        <p class="muted">Your daily edition will appear here.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
