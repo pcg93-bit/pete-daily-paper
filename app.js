@@ -11,6 +11,15 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+function safeUrl(str) {
+  try {
+    const u = new URL(str);
+    return u.protocol === "http:" || u.protocol === "https:" ? u.href : null;
+  } catch (err) {
+    return null;
+  }
+}
+
 function renderEdition(edition, { frontTitle, frontLead, content }) {
   if (edition.front_page?.title) {
     frontTitle.textContent = edition.front_page.title;
@@ -30,14 +39,20 @@ function renderEdition(edition, { frontTitle, frontLead, content }) {
     .map((section) => {
       const items = Array.isArray(section.items) ? section.items : [];
       const itemsHtml = items
-        .map(
-          (item) => `
+        .map((item) => {
+          const url = safeUrl(item.source_url);
+          const sourceHtml = url
+            ? `<p class="item__source"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Read more${item.source_name ? ` — ${escapeHtml(item.source_name)}` : ""}</a></p>`
+            : "";
+
+          return `
             <div class="item">
               <p class="item__headline">${escapeHtml(item.headline)}</p>
               <p class="item__body">${escapeHtml(item.body)}</p>
+              ${sourceHtml}
             </div>
-          `
-        )
+          `;
+        })
         .join("");
 
       return `
