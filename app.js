@@ -1,6 +1,9 @@
 // Pete Daily Paper — Live AI Edition
 
 const API_URL = "https://pete-daily-paper-worker.pete-daily-paper.workers.dev";
+// Not a real secret — visible to anyone who views this file. It only filters out
+// casual/opportunistic hits; the Worker's rate limiter is the real protection.
+const APP_TOKEN = "zXFd_LRFg-vT5M7UEoTEYHXk5BPzME8M";
 
 function escapeHtml(str) {
   const div = document.createElement("div");
@@ -72,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     content.innerHTML = "<p class='muted'>Generating today’s edition…</p>";
 
     try {
-      const res = await fetch(API_URL);
+      const res = await fetch(`${API_URL}?token=${encodeURIComponent(APP_TOKEN)}`);
       const data = await res.json();
 
       if (data.error) {
