@@ -65,6 +65,29 @@ function renderEdition(edition, { frontTitle, frontLead, content }) {
     .join("");
 }
 
+async function loadEdition({ frontTitle, frontLead, content }, { force } = {}) {
+  content.innerHTML = force
+    ? "<p class='muted'>Generating a fresh edition…</p>"
+    : "<p class='muted'>Loading today’s edition…</p>";
+
+  try {
+    const forceParam = force ? "&force=1" : "";
+    const res = await fetch(`${API_URL}?token=${encodeURIComponent(APP_TOKEN)}${forceParam}`);
+    const data = await res.json();
+
+    if (data.error) {
+      content.innerHTML = "<p class='muted'>Something went wrong generating today's edition. Try again.</p>";
+      console.error(data.detail);
+      return;
+    }
+
+    renderEdition(data.edition, { frontTitle, frontLead, content });
+  } catch (err) {
+    content.innerHTML = "<p class='muted'>Something went wrong. Try again.</p>";
+    console.error(err);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const button = document.getElementById("btnRefresh");
   const content = document.getElementById("content");
@@ -86,24 +109,10 @@ document.addEventListener("DOMContentLoaded", () => {
     frontLead.textContent = "Your personalized daily paper, generated fresh.";
   }
 
-  button.addEventListener("click", async () => {
-    content.innerHTML = "<p class='muted'>Generating today’s edition…</p>";
+  const refs = { frontTitle, frontLead, content };
 
-    try {
-      const res = await fetch(`${API_URL}?token=${encodeURIComponent(APP_TOKEN)}`);
-      const data = await res.json();
+  // Auto-load today's (cached) edition as soon as the page opens.
+  loadEdition(refs, { force: false });
 
-      if (data.error) {
-        content.innerHTML = "<p class='muted'>Something went wrong generating today's edition. Try again.</p>";
-        console.error(data.detail);
-        return;
-      }
-
-      renderEdition(data.edition, { frontTitle, frontLead, content });
-    } catch (err) {
-      content.innerHTML =
-        "<p class='muted'>Something went wrong. Try again.</p>";
-      console.error(err);
-    }
-  });
+  button.addEventListener("click", () => loadEdition(refs, { force: true }));
 });
