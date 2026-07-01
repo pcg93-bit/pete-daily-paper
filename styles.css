@@ -1,83 +1,218 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pete Daily Paper</title>
-  <link rel="manifest" href="/manifest.webmanifest">
-  <meta name="theme-color" content="#0b0b0b" />
-  <link rel="icon" href="/icon-192.png">
-  <link rel="stylesheet" href="/styles.css">
-</head>
-<body>
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand__name">Pete Daily Paper</div>
-      <div class="brand__sub">Curious • optimistic • high-signal</div>
-    </div>
+/* Pete Daily Paper — base styles */
 
-    <div class="topbar__actions">
-      <button id="btnRefresh" class="btn">Regenerate</button>
-      <button id="btnAddToHome" class="btn btn--ghost" title="On iPhone: Share → Add to Home Screen">Install</button>
-    </div>
-  </header>
+:root {
+  --bg: #0b0b0b;
+  --bg-panel: #151515;
+  --rule: #2a2a2a;
+  --text: #ececec;
+  --text-muted: #9a9a9a;
+  --accent: #d98e3c;
+  --serif: Georgia, "Times New Roman", Times, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
 
-  <nav class="sectionnav" id="sectionNav"></nav>
+* {
+  box-sizing: border-box;
+}
 
-  <main class="layout">
-    <section class="maincol">
-      <div class="headlineRow">
-        <div>
-          <div class="kicker" id="editionDate">Loading…</div>
-          <h1 class="h1" id="frontTitle">Today’s Edition</h1>
-          <p class="lead" id="frontLead"></p>
-        </div>
-        <div class="badge" id="statusBadge">Checking…</div>
-      </div>
+html, body {
+  margin: 0;
+  padding: 0;
+}
 
-      <div id="content"></div>
-    </section>
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
 
-    <aside class="sidecol">
-      <div class="panel">
-        <div class="panel__title">Saved</div>
-        <div class="panel__sub">Stories you saved across editions</div>
-        <div id="savedList" class="list"></div>
-      </div>
+/* ---------- Header ---------- */
 
-      <div class="panel">
-        <div class="panel__title">Watchlists</div>
-        <div class="panel__sub">Investing + Tools</div>
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--rule);
+}
 
-        <div class="tabs">
-          <button class="tab tab--active" data-tab="invest">Investing</button>
-          <button class="tab" data-tab="tools">Tools</button>
-        </div>
+.brand__name {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
 
-        <div id="watchInvest" class="list"></div>
-        <div id="watchTools" class="list hidden"></div>
-      </div>
+.brand__sub {
+  margin-top: 2px;
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
 
-      <div class="panel">
-        <div class="panel__title">Settings</div>
-        <label class="field">
-          <span>API Base URL</span>
-          <input id="apiBase" placeholder="https://your-worker.yourname.workers.dev" />
-        </label>
-        <button id="btnSaveSettings" class="btn btn--full">Save</button>
-        <div class="muted small">
-          Tip: set this once after you deploy your Worker.
-        </div>
-      </div>
-    </aside>
-  </main>
+.btn {
+  background: var(--accent);
+  color: #171717;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
 
-  <footer class="footer">
-    <div class="small muted">
-      Generates once per day when you open the app. “Regenerate” forces a refresh.
-    </div>
-  </footer>
+.btn:hover {
+  opacity: 0.85;
+}
 
-  <script src="/app.js"></script>
-</body>
-</html>
+.btn:active {
+  opacity: 0.7;
+}
+
+/* ---------- Layout ---------- */
+
+.layout {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.headlineRow {
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+
+.kicker {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.h1 {
+  font-family: var(--serif);
+  font-size: 38px;
+  line-height: 1.15;
+  margin: 0 0 12px;
+}
+
+.lead {
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ---------- Article content ---------- */
+
+#content {
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+#content p {
+  margin: 0 0 20px;
+}
+
+#content h2 {
+  font-size: 24px;
+  line-height: 1.3;
+  margin: 40px 0 12px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+
+#content h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+#content h3 {
+  font-size: 19px;
+  margin: 28px 0 10px;
+  color: var(--accent);
+}
+
+#content ul,
+#content ol {
+  margin: 0 0 20px;
+  padding-left: 22px;
+}
+
+#content li {
+  margin-bottom: 8px;
+}
+
+#content blockquote {
+  margin: 24px 0;
+  padding: 4px 0 4px 18px;
+  border-left: 3px solid var(--accent);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+#content a {
+  color: var(--accent);
+}
+
+#content strong {
+  color: #fff;
+}
+
+.muted {
+  font-family: var(--sans);
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px;
+  border-top: 1px solid var(--rule);
+}
+
+.small {
+  font-size: 13px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 560px) {
+  .topbar {
+    padding: 16px;
+  }
+
+  .brand__name {
+    font-size: 21px;
+  }
+
+  .layout {
+    padding: 24px 16px 48px;
+  }
+
+  .h1 {
+    font-size: 30px;
+  }
+
+  .lead {
+    font-size: 16px;
+  }
+
+  #content {
+    font-size: 17px;
+  }
+}
