@@ -120,46 +120,87 @@ body {
   margin: 12px 0 0;
 }
 
-.section {
-  margin-bottom: 40px;
-  padding-top: 24px;
-  border-top: 1px solid var(--rule);
+/* ---------- Section tabs ---------- */
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--rule);
+  scrollbar-width: thin;
 }
 
-.section:first-child {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: none;
+.tab {
+  flex: 0 0 auto;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.tab:hover {
+  color: var(--text);
+}
+
+.tab--active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ---------- Sections ---------- */
+
+.section {
+  display: none;
+}
+
+.section--active {
+  display: block;
 }
 
 .section__title {
   font-family: var(--serif);
   font-size: 24px;
   line-height: 1.3;
-  margin: 0 0 16px;
+  margin: 0 0 20px;
 }
 
 .item {
-  margin-bottom: 20px;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
 }
 
 .item:last-child {
+  padding-bottom: 0;
   margin-bottom: 0;
+  border-bottom: none;
 }
 
 .item__headline {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 700;
-  margin: 0 0 6px;
-  color: var(--accent);
+  line-height: 1.3;
+  margin: 0 0 8px;
+  color: var(--text);
 }
 
 .item__body {
   font-family: var(--serif);
   font-size: 18px;
   line-height: 1.7;
-  margin: 0;
+  margin: 0 0 8px;
 }
 
 .item__source {
@@ -169,6 +210,7 @@ body {
 .item__source a {
   font-family: var(--sans);
   font-size: 13px;
+  font-weight: 600;
   color: var(--accent);
   text-decoration: none;
 }
@@ -181,19 +223,6 @@ body {
   font-family: var(--sans);
   color: var(--text-muted);
   font-size: 15px;
-}
-
-/* ---------- Footer ---------- */
-
-.footer {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 24px;
-  border-top: 1px solid var(--rule);
-}
-
-.small {
-  font-size: 13px;
 }
 
 /* ---------- Responsive ---------- */
@@ -221,5 +250,10 @@ body {
 
   #content {
     font-size: 17px;
+  }
+
+  .tab {
+    font-size: 12px;
+    padding: 8px 10px;
   }
 }

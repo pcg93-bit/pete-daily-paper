@@ -20,7 +20,16 @@ function safeUrl(str) {
   }
 }
 
-function renderEdition(edition, { frontTitle, frontLead, content }) {
+function activateTab(slug, { tabsNav, content }) {
+  tabsNav.querySelectorAll(".tab").forEach((tab) => {
+    tab.classList.toggle("tab--active", tab.dataset.slug === slug);
+  });
+  content.querySelectorAll(".section").forEach((section) => {
+    section.classList.toggle("section--active", section.dataset.slug === slug);
+  });
+}
+
+function renderEdition(edition, { frontTitle, frontLead, content, tabsNav }) {
   if (edition.front_page?.title) {
     frontTitle.textContent = edition.front_page.title;
   }
@@ -31,18 +40,29 @@ function renderEdition(edition, { frontTitle, frontLead, content }) {
   const sections = Array.isArray(edition.sections) ? edition.sections : [];
 
   if (sections.length === 0) {
+    tabsNav.innerHTML = "";
     content.innerHTML = "<p class='muted'>No sections came back. Try Regenerate.</p>";
     return;
   }
 
+  tabsNav.innerHTML = sections
+    .map(
+      (section, i) => `
+        <button class="tab${i === 0 ? " tab--active" : ""}" data-slug="${escapeHtml(section.slug)}" type="button">
+          ${escapeHtml(section.title)}
+        </button>
+      `
+    )
+    .join("");
+
   content.innerHTML = sections
-    .map((section) => {
+    .map((section, i) => {
       const items = Array.isArray(section.items) ? section.items : [];
       const itemsHtml = items
         .map((item) => {
           const url = safeUrl(item.source_url);
           const sourceHtml = url
-            ? `<p class="item__source"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Read more${item.source_name ? ` — ${escapeHtml(item.source_name)}` : ""}</a></p>`
+            ? `<p class="item__source"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Read more${item.source_name ? ` — ${escapeHtml(item.source_name)}` : ""} →</a></p>`
             : "";
 
           return `
@@ -56,16 +76,21 @@ function renderEdition(edition, { frontTitle, frontLead, content }) {
         .join("");
 
       return `
-        <div class="section">
+        <div class="section${i === 0 ? " section--active" : ""}" data-slug="${escapeHtml(section.slug)}">
           <h2 class="section__title">${escapeHtml(section.title)}</h2>
           ${itemsHtml}
         </div>
       `;
     })
     .join("");
+
+  tabsNav.querySelectorAll(".tab").forEach((tab) => {
+    tab.addEventListener("click", () => activateTab(tab.dataset.slug, { tabsNav, content }));
+  });
 }
 
-async function loadEdition({ frontTitle, frontLead, content }, { force } = {}) {
+async function loadEdition({ frontTitle, frontLead, content, tabsNav }, { force } = {}) {
+  tabsNav.innerHTML = "";
   content.innerHTML = force
     ? "<p class='muted'>Generating a fresh edition…</p>"
     : "<p class='muted'>Loading today’s edition…</p>";
@@ -81,7 +106,7 @@ async function loadEdition({ frontTitle, frontLead, content }, { force } = {}) {
       return;
     }
 
-    renderEdition(data.edition, { frontTitle, frontLead, content });
+    renderEdition(data.edition, { frontTitle, frontLead, content, tabsNav });
   } catch (err) {
     content.innerHTML = "<p class='muted'>Something went wrong. Try again.</p>";
     console.error(err);
@@ -94,6 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const dateEl = document.getElementById("editionDate");
   const frontTitle = document.getElementById("frontTitle");
   const frontLead = document.getElementById("frontLead");
+  const tabsNav = document.getElementById("sectionTabs");
 
   if (dateEl) {
     const d = new Date();
@@ -109,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
     frontLead.textContent = "Your personalized daily paper, generated fresh.";
   }
 
-  const refs = { frontTitle, frontLead, content };
+  const refs = { frontTitle, frontLead, content, tabsNav };
 
   // Auto-load today's (cached) edition as soon as the page opens.
   loadEdition(refs, { force: false });
