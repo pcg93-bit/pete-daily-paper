@@ -130,6 +130,20 @@ body {
   margin-bottom: 32px;
   border-bottom: 1px solid var(--rule);
   scrollbar-width: thin;
+  scrollbar-color: var(--rule) transparent;
+}
+
+.tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tabs::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tabs::-webkit-scrollbar-thumb {
+  background: var(--rule);
+  border-radius: 2px;
 }
 
 .tab {
